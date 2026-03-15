@@ -33,7 +33,6 @@ description: Оптимизация воронки продаж ФинтехAI. 
 
 1. Подключись к серверу бота и прочитай БД:
    ```bash
-   sshpass -p '[REDACTED]' ssh root@[SERVER_IP] "cd /var/www/fintech-bot && sqlite3 data/bot.db 'SELECT COUNT(*) FROM audits; SELECT COUNT(*) FROM audits WHERE tripwire_clicked=1; SELECT COUNT(*) FROM audits WHERE tripwire_applied=1;'"
    ```
 2. Рассчитай конверсии на каждом этапе
 3. Сравни с бенчмарками из `references/best-practices.md`
@@ -95,6 +94,5 @@ description: Оптимизация воронки продаж ФинтехAI. 
 ## Правила
 
 - Все изменения в коде бота ТОЛЬКО через редактирование файлов в `~/workspace/fintech-bot/`
-- Деплой: `sshpass -p '[REDACTED]' scp bot.js root@[SERVER_IP]:/var/www/fintech-bot/` + `sshpass -p '[REDACTED]' ssh root@[SERVER_IP] 'pm2 restart fintech-ai-bot'`
 - Никогда не меняй API ключи и токены
 - Текст на русском, без длинных тире, минимум эмодзи

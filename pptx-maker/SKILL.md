@@ -48,7 +48,7 @@ N+1. Заключение / CTA
 ```bash
 python3 ~/.claude/skills/pptx-maker/scripts/create_pptx.py \
   --output "~/outputs/presentation-name.pptx" \
-  --theme "fintech-ai" \
+  --theme "company-brand" \
   --structure "structure.json"
 ```
 
