@@ -1,0 +1,100 @@
+---
+name: funnel-optimizer
+description: Оптимизация воронки продаж ФинтехAI. Анализ метрик, A/B тесты текстов/офферов, обновление базы знаний через веб-исследования. Use when пользователь просит: воронка, funnel, конверсия, tripwire, лид-магнит, аудит бизнеса, оптимизация продаж, A/B тест, метрики воронки, улучшить конверсию, лидогенерация, скоринг, оптимизируй оффер, проанализируй воронку.
+---
+
+# Скилл: funnel-optimizer
+
+Оптимизация воронки продаж ФинтехAI на основе данных и лучших практик.
+
+## Контекст проекта
+
+- **Бот:** @teamaifintech_bot (`~/workspace/fintech-bot/`)
+- **Сайт:** [YOUR_DOMAIN] (`[PROJECT_DIR]`)
+- **Канал:** @Neironka_live
+- **n8n:** [YOUR_N8N_DOMAIN]
+
+### Архитектура воронки
+
+```
+Канал/Сайт -> Бот (/audit) -> AI-скоринг (Claude Sonnet) -> Tripwire оффер (9900р) -> Core Product (50-300к)
+```
+
+### Модели
+
+- Аудит-отчёт: `anthropic/claude-sonnet-4.6` через OpenRouter
+- Обычный чат: `deepseek/deepseek-chat` через OpenRouter
+
+## Режимы работы
+
+### 1. Анализ метрик
+
+При запросе "проанализируй воронку" или "метрики":
+
+1. Подключись к серверу бота и прочитай БД:
+   ```bash
+   sshpass -p '[REDACTED]' ssh root@[SERVER_IP] "cd /var/www/fintech-bot && sqlite3 data/bot.db 'SELECT COUNT(*) FROM audits; SELECT COUNT(*) FROM audits WHERE tripwire_clicked=1; SELECT COUNT(*) FROM audits WHERE tripwire_applied=1;'"
+   ```
+2. Рассчитай конверсии на каждом этапе
+3. Сравни с бенчмарками из `references/best-practices.md`
+4. Запиши результаты в `references/metrics-log.md`
+5. Предложи конкретные улучшения
+
+### 2. A/B тестирование
+
+При запросе "A/B тест" или "протестировать оффер":
+
+1. Прочитай текущие тексты из `bot.js` (промты, офферы, CTA)
+2. Прочитай историю тестов из `references/ab-tests.md`
+3. Предложи 2-3 варианта текста с обоснованием
+4. После выбора пользователем - внеси изменение в код
+5. Запиши тест в `references/ab-tests.md` с датой начала
+6. При следующем вызове - проверь результаты и зафиксируй победителя
+
+### 3. Веб-исследование
+
+При запросе "обнови базу знаний" или "лучшие практики":
+
+1. Используй WebSearch для поиска актуальных практик:
+   - "tripwire marketing best practices 2026"
+   - "lead magnet B2B services conversion optimization"
+   - "AI consulting funnel strategies"
+   - "SaaS funnel optimization tactics"
+2. Извлеки ключевые инсайты
+3. Обнови `references/best-practices.md`
+4. Предложи конкретные изменения для нашей воронки
+
+### 4. Оптимизация промтов
+
+При запросе "оптимизируй промт аудита" или "улучши отчёт":
+
+1. Прочитай текущий `AUDIT_SYSTEM_PROMPT` из `bot.js`
+2. Проанализируй примеры сгенерированных отчётов (если есть в БД)
+3. Используй WebSearch для best practices по AI-скорингу
+4. Предложи улучшенный промт
+5. После одобрения - внеси изменение
+
+## Файлы проекта
+
+| Файл | Что содержит |
+|---|---|
+| `~/workspace/fintech-bot/bot.js` | Основной код бота, промты, тексты |
+| `~/workspace/fintech-bot/database.js` | БД: таблицы users, leads, audits |
+| `~/workspace/fintech-bot/.env` | Модели, API ключи |
+| `~/workspace/fintech-bot/streaming.js` | Стриминг AI-ответов |
+
+## Самообучение
+
+При каждом вызове скилл ОБЯЗАТЕЛЬНО:
+
+1. **Читает** `references/metrics-log.md` и `references/ab-tests.md`
+2. **Анализирует** тренды: что улучшилось, что ухудшилось
+3. **Обновляет** `references/best-practices.md` если нашёл новые инсайты
+4. **Предлагает** следующий шаг оптимизации на основе данных
+
+## Правила
+
+- Все изменения в коде бота ТОЛЬКО через редактирование файлов в `~/workspace/fintech-bot/`
+- Деплой: `sshpass -p '[REDACTED]' scp bot.js root@[SERVER_IP]:/var/www/fintech-bot/` + `sshpass -p '[REDACTED]' ssh root@[SERVER_IP] 'pm2 restart fintech-ai-bot'`
+- Никогда не меняй API ключи и токены
+- Текст на русском, без длинных тире, минимум эмодзи
